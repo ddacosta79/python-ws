@@ -8,7 +8,6 @@ db_connect = create_engine('sqlite:///chinook.db')
 app = Flask(__name__)
 api = Api(app)
 
-
 class Employees(Resource):
     def get(self):
         conn = db_connect.connect() # connect to database
@@ -56,6 +55,31 @@ class Employees_Name(Resource):
         result = {'data': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
         return jsonify(result)
 
+    def put(self, employee_id):
+        conn = db_connect.connect()
+        print(request.json)
+        LastName = request.json['LastName']
+        FirstName = request.json['FirstName']
+        Title = request.json['Title']
+        ReportsTo = request.json['ReportsTo']
+        BirthDate = request.json['BirthDate']
+        HireDate = request.json['HireDate']
+        Address = request.json['Address']
+        City = request.json['City']
+        State = request.json['State']
+        Country = request.json['Country']
+        PostalCode = request.json['PostalCode']
+        Phone = request.json['Phone']
+        Fax = request.json['Fax']
+        Email = request.json['Email']
+        employeeinput= int(employee_id)
+        query = conn.execute("update employees set LastName='{0}',FirstName='{1}',Title='{2}',ReportsTo='{3}', \
+                             BirthDate='{4}',HireDate='{5}',Address='{6}',City='{7}',State='{8}',Country='{9}',PostalCode='{10}',Phone='{11}',Fax='{12}', \
+                             Email='{13}' where EmployeeId ={14}".format(LastName,FirstName,Title,
+                             ReportsTo, BirthDate, HireDate, Address,
+                             City, State, Country, PostalCode, Phone, Fax,
+                             Email,employeeinput))
+        return {'status':'success'}
 
 api.add_resource(Employees, '/employees') # Route_1
 api.add_resource(Tracks, '/tracks') # Route_2
